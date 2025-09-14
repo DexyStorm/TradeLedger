@@ -1,2 +1,2 @@
-# TradeLedger
-this is a bot that keeps track of trades on reddit
+# BalisongMarketBot
+this is a bot for the BalisongMarket subreddit

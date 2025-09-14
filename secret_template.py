@@ -1,0 +1,6 @@
+subreddit_name = ""
+username = ""
+password = ""
+client_id = ""
+client_secret = ""
+user_agent = "Bot by "
