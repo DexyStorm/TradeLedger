@@ -42,8 +42,15 @@ def get_username_from_mention(text):
 	finished_str = "u/" + finished_str
 	return finished_str
 	
+def traded_response(trade_partner, comment_original_poster):
+	reply: str =  trade_partner + " if you have traded with " + comment_original_poster + " please answer with '!confirm' followed by a short review of how the trade went. If you have not traded with " + comment_original_poster + ", please ignore this message."
+	comment.reply(reply)
+	print(reply)
+	#todo
+	#give_points(comment_original_poster, trade_partner)
+	
 
-def handle_traded(text):
+def handle_traded(text, comment):
 
 	comment_original_poster: str = comment.author #gets the name of comment OP
 	comment_original_poster = "u/" + comment_original_poster.name
@@ -59,32 +66,30 @@ def handle_traded(text):
 				continue
 			elif(trade_partner.lower() == ("u/" + bot_username.lower())):
 				continue
-			
 			else:
-				#print("comment_original_poster:", comment_original_poster)
-				#print("trade_partner: ", trade_partner)
 				user_counter = user_counter + 1
 
 
 	if(user_counter >= 2):
+		reply: str =  "Multiple trade partners detected.\nYou can only announce a trade with one person per comment.\nIf you have traded with multiple people, please make a separate comment for each trading partner.\n"
+		comment.reply(reply)
 		print("Multiple trade partners detected.")
 		print("You can only announce a trade with one person per comment.")
 		print("If you have traded with multiple people, please make a separate comment for each trading partner.\n")
 	elif((user_counter == 0) and (found_original_poster == False)):
-		print("Could not find trade partner. Please report this to the Admins.\n")
+		reply: str =  "Could not find trade partner. If you have tagged somebody, please report this to the Admins.\n."
+		comment.reply(reply)
+		print("Could not find trade partner. If you have tagged somebody, please report this to the Admins.\n")
 	elif((user_counter == 0) and (found_original_poster == True)):
+		reply: str =  "It seems like you have tried to tag yourself in this comment.\nYou cannot trade with yourself."
+		comment.reply(reply)
 		print("It seems like OP has tagged himself in his comment")
 		print("You cannot trade with yourself.\n")
-	else:	
-		give_points(comment_original_poster, trade_partner)
-		print("Your deal partner is:", trade_partner, "\n")
+	else:
+		traded_response(trade_partner, comment_original_poster)
+		
 
 
-	#debug:
-	#print("found_original_poster: ", found_original_poster)
-	#print("comment_original_poster: ", comment_original_poster)
-	#print("user_counter: ", user_counter)
-	#print("deal_partner: ", deal_partner)
 
 
 
@@ -104,7 +109,7 @@ def parse_comment(text, comment):
 
 	if(text.lower().startswith("!sold") or text.lower().startswith("!sell") or text.lower().startswith("!traded") or text.lower().startswith("!trade")):
 		if(check_if_comment_op_is_op(comment) == True):
-			handle_traded(text)
+			handle_traded(text, comment)
 		else:
 			print("Sorry, only the original poster can initiate a confirmation.\n")
 	elif(text.lower().startswith("!confirm")):
